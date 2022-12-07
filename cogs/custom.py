@@ -8,10 +8,9 @@ Version: 5.3
 
 import random
 
+from data.helpers import checks
 from discord.ext import commands
 from discord.ext.commands import Context
-
-from data.helpers import checks
 
 
 class CustomCommands(commands.Cog, name="custom"):
@@ -26,7 +25,7 @@ class CustomCommands(commands.Cog, name="custom"):
     )
     # This will only allow non-blacklisted members to execute the command
     @checks.not_blacklisted()
-    # This will only allow owners of the bot to execute the command -> example-config.json
+    # This will only allow owners of the bot to execute the command -> config.json
     # @checks.is_owner()
     async def random_bs(self, context: Context):
         """

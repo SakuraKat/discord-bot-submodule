@@ -6,10 +6,9 @@ This is a template to create your own discord bot in python.
 Version: 5.3
 """
 
+from data.helpers import checks
 from discord.ext import commands
 from discord.ext.commands import Context
-
-from data.helpers import checks
 
 
 # Here we name the cog and create a new class for the cog.
@@ -25,7 +24,7 @@ class Template(commands.Cog, name="template"):
     )
     # This will only allow non-blacklisted members to execute the command
     @checks.not_blacklisted()
-    # This will only allow owners of the bot to execute the command -> example-config.json
+    # This will only allow owners of the bot to execute the command -> onfig.json
     @checks.is_owner()
     async def testcommand(self, context: Context):
         """
