@@ -1,4 +1,4 @@
-# Path: bot.py
+# Path: discord-bot-submodule/bot.py
 # Using template: https://github.com/kkrypt0nn/Python-Discord-Bot-Template
 #
 
