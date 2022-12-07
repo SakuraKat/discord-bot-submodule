@@ -11,7 +11,7 @@ import random
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from ..helpers import checks
+from helpers import checks
 
 
 class CustomCommands(commands.Cog, name="custom"):
@@ -38,7 +38,10 @@ class CustomCommands(commands.Cog, name="custom"):
         # the file is located in data/combined.txt
         # the file contents are in utf-8 encoding
         # the file contains one bullshit per line
-        bs = random.choice(open("data/combined.txt", encoding="utf-8").readlines()).replace("___", "#")
+        # file path from root directory: data/combined.txt
+        # current file path: discord-bot-submodule\cogs\custom.py
+        # relative file path: ../data/combined.txt
+        bs = random.choice(open("../data/combined.txt", encoding="utf-8").readlines()).replace("___", "#")
         # Send the bullshit to the channel
         await context.send(bs)
 

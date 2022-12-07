@@ -30,8 +30,8 @@ bot = Bot(command_prefix=commands.when_mentioned_or(
 
 
 async def init_db():
-    async with aiosqlite.connect("data/database/database.db") as db:
-        with open("data/database/schema.sql") as schema_file:
+    async with aiosqlite.connect("database/database.db") as db:
+        with open("database/schema.sql") as schema_file:
             await db.executescript(schema_file.read())
         await db.commit()
 
@@ -159,11 +159,11 @@ async def load_cogs() -> None:
     """
     The code in this function is executed whenever the bot will start.
     """
-    for cog_file in os.listdir(f"./data/cogs"):
+    for cog_file in os.listdir(f"./cogs"):
         if cog_file.endswith(".py"):
             extension = cog_file[:-3]
             try:
-                await bot.load_extension(f"data.cogs.{extension}")
+                await bot.load_extension(f"cogs.{extension}")
                 print(f"Loaded extension '{extension}'")
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}"

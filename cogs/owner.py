@@ -11,7 +11,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from ..helpers import db_manager, checks
+from helpers import checks, db_manager
 
 
 class Owner(commands.Cog, name="owner"):

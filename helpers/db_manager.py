@@ -15,7 +15,7 @@ async def is_blacklisted(user_id: int) -> bool:
     :param user_id: The ID of the user that should be checked
     :return: True if the user is blacklisted, False if not
     """
-    async with aiosqlite.connect("/database/database.db") as db:
+    async with aiosqlite.connect("database/database.db") as db:
         async with db.execute("SELECT * FROM blacklist WHERE user_id=?", (user_id,)) as cursor:
             result = await cursor.fetchone()
             return result is not None
