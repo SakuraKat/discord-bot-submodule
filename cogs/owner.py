@@ -6,16 +6,12 @@ This is a template to create your own discord bot in python.
 Version: 5.3
 """
 
-import json
-import os
-import sys
-
 import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from helpers import checks, db_manager
+from data.helpers import db_manager, checks
 
 
 class Owner(commands.Cog, name="owner"):

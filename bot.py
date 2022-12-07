@@ -1,10 +1,6 @@
-"""
-Copyright © Krypton 2022 - https://github.com/kkrypt0nn (https://krypton.ninja)
-Description:
-This is a template to create your own discord bot in python.
-
-Version: 5.3
-"""
+# Path: bot.py
+# Using template: https://github.com/kkrypt0nn/Python-Discord-Bot-Template
+#
 
 import asyncio
 import json
@@ -18,7 +14,7 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
 
-import exceptions
+from data import exceptions
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -26,67 +22,20 @@ else:
     with open("config.json") as file:
         config = json.load(file)
 
-"""	
-Setup bot intents (events restrictions)
-For more information about intents, please go to the following websites:
-https://discordpy.readthedocs.io/en/latest/intents.html
-https://discordpy.readthedocs.io/en/latest/intents.html#privileged-intents
-
-
-Default Intents:
-intents.bans = True
-intents.dm_messages = True
-intents.dm_reactions = True
-intents.dm_typing = True
-intents.emojis = True
-intents.emojis_and_stickers = True
-intents.guild_messages = True
-intents.guild_reactions = True
-intents.guild_scheduled_events = True
-intents.guild_typing = True
-intents.guilds = True
-intents.integrations = True
-intents.invites = True
-intents.messages = True # `message_content` is required to get the content of the messages
-intents.reactions = True
-intents.typing = True
-intents.voice_states = True
-intents.webhooks = True
-
-Privileged Intents (Needs to be enabled on developer portal of Discord), please use them only if you need them:
-intents.members = True
-intents.message_content = True
-intents.presences = True
-"""
-
 intents = discord.Intents.default()
-
-"""
-Uncomment this if you don't want to use prefix (normal) commands.
-It is recommended to use slash commands and therefore not use prefix commands.
-
-If you want to use prefix commands, make sure to also enable the intent below in the Discord developer portal.
-"""
-# intents.message_content = True
+intents.message_content = True
 
 bot = Bot(command_prefix=commands.when_mentioned_or(
     config["prefix"]), intents=intents, help_command=None)
 
 
 async def init_db():
-    async with aiosqlite.connect("database/database.db") as db:
-        with open("database/schema.sql") as file:
+    async with aiosqlite.connect("data/database/database.db") as db:
+        with open("data/database/schema.sql") as file:
             await db.executescript(file.read())
         await db.commit()
 
 
-"""
-Create a bot variable to access the config file in cogs so that you don't need to import it every time.
-
-The config is available using the following code:
-- bot.config # In this file
-- self.bot.config # In cogs
-"""
 bot.config = config
 
 
@@ -124,6 +73,9 @@ async def on_message(message: discord.Message) -> None:
     """
     if message.author == bot.user or message.author.bot:
         return
+
+    if not message.content.startswith(config["prefix"]):
+        await do_magic(message)
     await bot.process_commands(message)
 
 
@@ -205,17 +157,27 @@ async def load_cogs() -> None:
     """
     The code in this function is executed whenever the bot will start.
     """
-    for file in os.listdir(f"./cogs"):
+    for file in os.listdir(f"./data/cogs"):
         if file.endswith(".py"):
             extension = file[:-3]
             try:
-                await bot.load_extension(f"cogs.{extension}")
+                await bot.load_extension(f"data.cogs.{extension}")
                 print(f"Loaded extension '{extension}'")
             except Exception as e:
                 exception = f"{type(e).__name__}: {e}"
                 print(f"Failed to load extension {extension}\n{exception}")
 
 
-asyncio.run(init_db())
-asyncio.run(load_cogs())
-bot.run(config["token"])
+async def do_magic(message: discord.Message):
+    """
+    The code in this function is executed every time someone sends a message without the prefix.
+    """
+    channel = message.channel
+    if message.content == "Hello":
+        await channel.send("Hello")
+
+
+if __name__ == "__main__":
+    asyncio.run(init_db())
+    asyncio.run(load_cogs())
+    bot.run(config["token"])

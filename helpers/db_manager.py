@@ -16,7 +16,7 @@ async def is_blacklisted(user_id: int) -> bool:
     :param user_id: The ID of the user that should be checked.
     :return: True if the user is blacklisted, False if not.
     """
-    async with aiosqlite.connect("database/database.db") as db:
+    async with aiosqlite.connect("data/database/database.db") as db:
         async with db.execute("SELECT * FROM blacklist WHERE user_id=?", (user_id,)) as cursor:
             result = await cursor.fetchone()
             return result is not None
@@ -95,7 +95,8 @@ async def get_warnings(user_id: int, server_id: int) -> list:
     :return: A list of all the warnings of the user.
     """
     async with aiosqlite.connect("database/database.db") as db:
-        rows = await db.execute("SELECT user_id, server_id, moderator_id, reason, strftime('%s', created_at), id FROM warns WHERE user_id=? AND server_id=?", (user_id, server_id,))
+        rows = await db.execute("SELECT user_id, server_id, moderator_id, reason, strftime('%s', created_at), "
+                                "id FROM warns WHERE user_id=? AND server_id=?", (user_id, server_id,))
         async with rows as cursor:
             result = await cursor.fetchall()
             result_list = []
