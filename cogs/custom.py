@@ -33,7 +33,7 @@ class CustomCommands(commands.Cog, name="custom"):
         # file path from root directory: data/combined.txt
         # current file path: discord-bot-submodule\cogs\custom.py
         # relative file path: ../data/combined.txt
-        bs = random.choice(open("../data/combined.txt", encoding="utf-8").readlines()).replace("___", "#")
+        bs = random.SystemRandom().choice(open("../data/combined.txt", encoding="utf-8").readlines()).replace("___", "#")
         # Send the bullshit to the channel
         await context.send(bs)
 

@@ -60,7 +60,7 @@ async def status_task() -> None:
     Set up the game status task of the bot
     """
     statuses = ["with you!", "with Krypton!", "with humans!"]
-    await bot.change_presence(activity=discord.Game(random.choice(statuses)))
+    await bot.change_presence(activity=discord.Game(random.SystemRandom().choice(statuses)))
 
 
 @bot.event

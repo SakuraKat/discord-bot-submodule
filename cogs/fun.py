@@ -61,7 +61,7 @@ class RockPaperScissors(discord.ui.Select):
         user_choice = self.values[0].lower()
         user_choice_index = choices[user_choice]
 
-        bot_choice = random.choice(list(choices.keys()))
+        bot_choice = random.SystemRandom().choice(list(choices.keys()))
         bot_choice_index = choices[bot_choice]
 
         result_embed = discord.Embed(color=0x9C84EF)
@@ -143,7 +143,7 @@ class Fun(commands.Cog, name="fun"):
         )
         message = await context.send(embed=embed, view=buttons)
         await buttons.wait()  # We wait for the user to click a button.
-        result = random.choice(["heads", "tails"])
+        result = random.SystemRandom().choice(["heads", "tails"])
         if buttons.value == result:
             embed = discord.Embed(
                 description=f"Correct! You guessed `{buttons.value}` and I flipped the coin to `{result}`.",
