@@ -1,0 +1,11 @@
+name: DLint Static Security Analysis
+
+on:  [push, fork]
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: xen0l/dlint-check@master
