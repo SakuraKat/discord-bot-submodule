@@ -8,9 +8,10 @@ Version: 5.3
 
 import random
 
-from data.helpers import checks
 from discord.ext import commands
 from discord.ext.commands import Context
+
+from ..helpers import checks
 
 
 class CustomCommands(commands.Cog, name="custom"):
@@ -29,9 +30,8 @@ class CustomCommands(commands.Cog, name="custom"):
     # @checks.is_owner()
     async def random_bs(self, context: Context):
         """
-        The command that prints out random bullshit from the dataset.
-
-        :param context: The application command context.
+        The command that prints out random bullshit from the dataset
+        :param context: The application command context
         """
         # Do your stuff here
         # Pick a random line from combined.txt and assign it to a variable called bs

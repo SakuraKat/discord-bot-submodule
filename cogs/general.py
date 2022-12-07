@@ -15,7 +15,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from data.helpers import checks
+from ..helpers import checks
 
 
 class General(commands.Cog, name="general"):
@@ -33,9 +33,9 @@ class General(commands.Cog, name="general"):
             title="Help", description="List of available commands:", color=0x9C84EF)
         for i in self.bot.cogs:
             cog = self.bot.get_cog(i.lower())
-            commands = cog.get_commands()
+            cogs_commands = cog.get_commands()
             data = []
-            for command in commands:
+            for command in cogs_commands:
                 description = command.description.partition('\n')[0]
                 data.append(f"{prefix}{command.name} - {description}")
             help_text = "\n".join(data)
@@ -50,9 +50,8 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def botinfo(self, context: Context) -> None:
         """
-        Get some useful (or not) information about the bot.
-
-        :param context: The hybrid command context.
+        Get some useful (or not) information about the bot
+        :param context: The hybrid command context
         """
         embed = discord.Embed(
             description="Used [Krypton's](https://krypton.ninja) template",
@@ -88,9 +87,8 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def serverinfo(self, context: Context) -> None:
         """
-        Get some useful (or not) information about the server.
-
-        :param context: The hybrid command context.
+        Get some useful (or not) information about the server
+        :param context: The hybrid command context
         """
         roles = [role.name for role in context.guild.roles]
         if len(roles) > 50:
@@ -135,9 +133,8 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def ping(self, context: Context) -> None:
         """
-        Check if the bot is alive.
-
-        :param context: The hybrid command context.
+        Check if the bot is alive
+        :param context: The hybrid command context
         """
         embed = discord.Embed(
             title="🏓 Pong!",
@@ -153,16 +150,18 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def invite(self, context: Context) -> None:
         """
-        Get the invite link of the bot to be able to invite it.
-
-        :param context: The hybrid command context.
+        Get the invite link of the bot to be able to invite it
+        :param context: The hybrid command context
         """
         embed = discord.Embed(
-            description=f"Invite me by clicking [here](https://discordapp.com/oauth2/authorize?&client_id={self.bot.config['application_id']}&scope=bot+applications.commands&permissions={self.bot.config['permissions']}).",
+            description=f"Invite me by clicking [here](https://discordapp.com/oauth2/authorize?&"
+            f"client_id={self.bot.config['application_id']}&"
+            f"scope=bot+applications.commands&permissions={self.bot.config['permissions']}).",
             color=0xD75BF4
         )
         try:
-            # To know what permissions to give to your bot, please see here: https://discordapi.com/permissions.html and remember to not give Administrator permissions.
+            # To know what permissions to give to your bot, please see here
+            # https://discordapi.com/permissions.html and remember to not give Administrator permissions.
             await context.author.send(embed=embed)
             await context.send("I sent you a private message!")
         except discord.Forbidden:
@@ -175,9 +174,8 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def server(self, context: Context) -> None:
         """
-        Get the invite link of the discord server of the bot for some support.
-
-        :param context: The hybrid command context.
+        Get the invite link of the discord server of the bot for some support
+        :param context: The hybrid command context
         """
         embed = discord.Embed(
             description=f"Join the support server for the bot by clicking [here](https://discord.gg/mTBrXyWxAF).",
@@ -197,10 +195,9 @@ class General(commands.Cog, name="general"):
     @app_commands.describe(question="The question you want to ask.")
     async def eight_ball(self, context: Context, *, question: str) -> None:
         """
-        Ask any question to the bot.
-
-        :param context: The hybrid command context.
-        :param question: The question that should be asked by the user.
+        Ask any question to the bot
+        :param context: The hybrid command context
+        :param question: The question that should be asked by the user
         """
         answers = ["It is certain.", "It is decidedly so.", "You may rely on it.", "Without a doubt.",
                    "Yes - definitely.", "As I see, yes.", "Most likely.", "Outlook good.", "Yes.",
@@ -224,16 +221,17 @@ class General(commands.Cog, name="general"):
     @checks.not_blacklisted()
     async def bitcoin(self, context: Context) -> None:
         """
-        Get the current price of bitcoin.
-
-        :param context: The hybrid command context.
+        Get the current price of bitcoin
+        :param context: The hybrid command context
         """
-        # This will prevent your bot from stopping everything when doing a web request - see: https://discordpy.readthedocs.io/en/stable/faq.html#how-do-i-make-a-web-request
+        # This will prevent your bot from stopping everything when doing a web request
+        # see: https://discordpy.readthedocs.io/en/stable/faq.html#how-do-i-make-a-web-request
         async with aiohttp.ClientSession() as session:
             async with session.get("https://api.coindesk.com/v1/bpi/currentprice/BTC.json") as request:
                 if request.status == 200:
                     data = await request.json(
-                        content_type="application/javascript")  # For some reason the returned content is of type JavaScript
+                        # For some reason the returned content is of type JavaScript
+                        content_type="application/javascript")
                     embed = discord.Embed(
                         title="Bitcoin price",
                         description=f"The current price is {data['bpi']['USD']['rate']} :dollar:",

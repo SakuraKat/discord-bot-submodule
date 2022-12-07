@@ -11,7 +11,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from data.helpers import db_manager, checks
+from ..helpers import db_manager, checks
 
 
 class Owner(commands.Cog, name="owner"):
@@ -20,16 +20,15 @@ class Owner(commands.Cog, name="owner"):
 
     @commands.command(
         name="sync",
-        description="Synchonizes the slash commands.",
+        description="Synchronizes the slash commands.",
     )
     @app_commands.describe(scope="The scope of the sync. Can be `global` or `guild`")
     @checks.is_owner()
     async def sync(self, context: Context, scope: str) -> None:
         """
-        Synchonizes the slash commands.
-
-        :param context: The command context.
-        :param scope: The scope of the sync. Can be `global` or `guild`.
+        Synchronizes the slash commands
+        :param context: The command context
+        :param scope: The scope of the sync. Can be `global` or `guild`
         """
 
         if scope == "global":
@@ -60,16 +59,15 @@ class Owner(commands.Cog, name="owner"):
 
     @commands.command(
         name="unsync",
-        description="Unsynchonizes the slash commands.",
+        description="Unsynchronizes the slash commands.",
     )
     @app_commands.describe(scope="The scope of the sync. Can be `global`, `current_guild` or `guild`")
     @checks.is_owner()
     async def unsync(self, context: Context, scope: str) -> None:
         """
-        Unsynchonizes the slash commands.
-
-        :param context: The command context.
-        :param scope: The scope of the sync. Can be `global`, `current_guild` or `guild`.
+        Unsynchronizes the slash commands
+        :param context: The command context
+        :param scope: The scope of the sync. Can be `global`, `current_guild` or `guild`
         """
 
         if scope == "global":
@@ -107,14 +105,13 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def load(self, context: Context, cog: str) -> None:
         """
-        The bot will load the given cog.
-
-        :param context: The hybrid command context.
-        :param cog: The name of the cog to load.
+        The bot will load the given cog
+        :param context: The hybrid command context
+        :param cog: The name of the cog to load
         """
         try:
             await self.bot.load_extension(f"cogs.{cog}")
-        except Exception:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
                 description=f"Could not load the `{cog}` cog.",
@@ -137,14 +134,13 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def unload(self, context: Context, cog: str) -> None:
         """
-        The bot will unload the given cog.
-
-        :param context: The hybrid command context.
-        :param cog: The name of the cog to unload.
+        The bot will unload the given cog
+        :param context: The hybrid command context
+        :param cog: The name of the cog to unload
         """
         try:
             await self.bot.unload_extension(f"cogs.{cog}")
-        except Exception:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
                 description=f"Could not unload the `{cog}` cog.",
@@ -167,14 +163,13 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def reload(self, context: Context, cog: str) -> None:
         """
-        The bot will reload the given cog.
-
-        :param context: The hybrid command context.
-        :param cog: The name of the cog to reload.
+        The bot will reload the given cog
+        :param context: The hybrid command context
+        :param cog: The name of the cog to reload
         """
         try:
             await self.bot.reload_extension(f"cogs.{cog}")
-        except Exception:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
                 description=f"Could not reload the `{cog}` cog.",
@@ -196,9 +191,8 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def shutdown(self, context: Context) -> None:
         """
-        Shuts down the bot.
-
-        :param context: The hybrid command context.
+        Shuts down the bot
+        :param context: The hybrid command context
         """
         embed = discord.Embed(
             description="Shutting down. Bye! :wave:",
@@ -215,10 +209,9 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def say(self, context: Context, *, message: str) -> None:
         """
-        The bot will say anything you want.
-
-        :param context: The hybrid command context.
-        :param message: The message that should be repeated by the bot.
+        The bot will say anything you want
+        :param context: The hybrid command context
+        :param message: The message that should be repeated by the bot
         """
         await context.send(message)
 
@@ -230,10 +223,9 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def embed(self, context: Context, *, message: str) -> None:
         """
-        The bot will say anything you want, but using embeds.
-
-        :param context: The hybrid command context.
-        :param message: The message that should be repeated by the bot.
+        The bot will say anything you want, but using embeds
+        :param context: The hybrid command context
+        :param message: The message that should be repeated by the bot
         """
         embed = discord.Embed(
             description=message,
@@ -248,14 +240,17 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def blacklist(self, context: Context) -> None:
         """
-        Lets you add or remove a user from not being able to use the bot.
-
-        :param context: The hybrid command context.
+        Lets you add or remove a user from not being able to use the bot
+        :param context: The hybrid command context
         """
         if context.invoked_subcommand is None:
             embed = discord.Embed(
                 title="Blacklist",
-                description="You need to specify a subcommand.\n\n**Subcommands:**\n`add` - Add a user to the blacklist.\n`remove` - Remove a user from the blacklist.",
+                description="You need to specify a subcommand.\n"
+                            "\n"
+                            "**Subcommands:**\n"
+                            "`add` - Add a user to the blacklist.\n"
+                            "`remove` - Remove a user from the blacklist.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)
@@ -269,10 +264,9 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def blacklist_add(self, context: Context, user: discord.User) -> None:
         """
-        Lets you add a user from not being able to use the bot.
-
-        :param context: The hybrid command context.
-        :param user: The user that should be added to the blacklist.
+        Lets you add a user from not being able to use the bot
+        :param context: The hybrid command context
+        :param user: The user that should be added to the blacklist
         """
         user_id = user.id
         if await db_manager.is_blacklisted(user_id):
@@ -303,10 +297,9 @@ class Owner(commands.Cog, name="owner"):
     @checks.is_owner()
     async def blacklist_remove(self, context: Context, user: discord.User) -> None:
         """
-        Lets you remove a user from not being able to use the bot.
-
-        :param context: The hybrid command context.
-        :param user: The user that should be removed from the blacklist.
+        Lets you remove a user from not being able to use the bot
+        :param context: The hybrid command context
+        :param user: The user that should be removed from the blacklist
         """
         user_id = user.id
         if not await db_manager.is_blacklisted(user_id):

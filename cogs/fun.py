@@ -13,7 +13,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from data.helpers import checks
+from ..helpers import checks
 
 
 class Choice(discord.ui.View):
@@ -22,12 +22,12 @@ class Choice(discord.ui.View):
         self.value = None
 
     @discord.ui.button(label="Heads", style=discord.ButtonStyle.blurple)
-    async def confirm(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def confirm(self, _button: discord.ui.Button, _interaction: discord.Interaction):
         self.value = "heads"
         self.stop()
 
     @discord.ui.button(label="Tails", style=discord.ButtonStyle.blurple)
-    async def cancel(self, button: discord.ui.Button, interaction: discord.Interaction):
+    async def cancel(self, _button: discord.ui.Button, _interaction: discord.Interaction):
         self.value = "tails"
         self.stop()
 
@@ -105,11 +105,11 @@ class Fun(commands.Cog, name="fun"):
     @checks.not_blacklisted()
     async def randomfact(self, context: Context) -> None:
         """
-        Get a random fact.
-
-        :param context: The hybrid command context.
+        Get a random fact
+        :param context: The hybrid command context
         """
-        # This will prevent your bot from stopping everything when doing a web request - see: https://discordpy.readthedocs.io/en/stable/faq.html#how-do-i-make-a-web-request
+        # This will prevent your bot from stopping everything when doing a web request
+        # see: https://discordpy.readthedocs.io/en/stable/faq.html#how-do-i-make-a-web-request
         async with aiohttp.ClientSession() as session:
             async with session.get("https://uselessfacts.jsph.pl/random.json?language=en") as request:
                 if request.status == 200:
@@ -133,9 +133,8 @@ class Fun(commands.Cog, name="fun"):
     @checks.not_blacklisted()
     async def coinflip(self, context: Context) -> None:
         """
-        Make a coin flip, but give your bet before.
-
-        :param context: The hybrid command context.
+        Make a coin flip, but give your bet before
+        :param context: The hybrid command context
         """
         buttons = Choice()
         embed = discord.Embed(
@@ -152,7 +151,8 @@ class Fun(commands.Cog, name="fun"):
             )
         else:
             embed = discord.Embed(
-                description=f"Woops! You guessed `{buttons.value}` and I flipped the coin to `{result}`, better luck next time!",
+                description=f"Woops! You guessed `{buttons.value}` and I flipped the coin to `{result}"
+                            f"`, better luck next time!",
                 color=0xE02B2B
             )
         await message.edit(embed=embed, view=None, content=None)
@@ -164,9 +164,8 @@ class Fun(commands.Cog, name="fun"):
     @checks.not_blacklisted()
     async def rock_paper_scissors(self, context: Context) -> None:
         """
-        Play the rock paper scissors game against the bot.
-
-        :param context: The hybrid command context.
+        Play the rock paper scissors game against the bot
+        :param context: The hybrid command context
         """
         view = RockPaperScissorsView()
         await context.send("Please make your choice", view=view)

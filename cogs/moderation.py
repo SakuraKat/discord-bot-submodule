@@ -11,7 +11,7 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from data.helpers import db_manager, checks
+from ..helpers import db_manager, checks
 
 
 class Moderation(commands.Cog, name="moderation"):
@@ -27,11 +27,10 @@ class Moderation(commands.Cog, name="moderation"):
     @app_commands.describe(user="The user that should be kicked.", reason="The reason why the user should be kicked.")
     async def kick(self, context: Context, user: discord.User, *, reason: str = "Not specified") -> None:
         """
-        Kick a user out of the server.
-
-        :param context: The hybrid command context.
-        :param user: The user that should be kicked from the server.
-        :param reason: The reason for the kick. Default is "Not specified".
+        Kick a user out of the server
+        :param context: The hybrid command context
+        :param user: The user that should be kicked from the server
+        :param reason: The reason for the kick. Default is "Not specified"
         """
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         if member.guild_permissions.administrator:
@@ -57,14 +56,14 @@ class Moderation(commands.Cog, name="moderation"):
                     await member.send(
                         f"You were kicked by **{context.author}**!\nReason: {reason}"
                     )
-                except:
-                    # Couldn't send a message in the private messages of the user
+                except (Exception,):
                     pass
                 await member.kick(reason=reason)
-            except:
+            except (Exception,):
                 embed = discord.Embed(
                     title="Error!",
-                    description="An error occurred while trying to kick the user. Make sure my role is above the role of the user you want to kick.",
+                    description="An error occurred while trying to kick the user. "
+                                "Make sure my role is above the role of the user you want to kick.",
                     color=0xE02B2B
                 )
                 await context.send(embed=embed)
@@ -75,14 +74,14 @@ class Moderation(commands.Cog, name="moderation"):
     )
     @commands.has_permissions(manage_nicknames=True)
     @checks.not_blacklisted()
-    @app_commands.describe(user="The user that should have a new nickname.", nickname="The new nickname that should be set.")
+    @app_commands.describe(user="The user that should have a new nickname.",
+                           nickname="The new nickname that should be set.")
     async def nick(self, context: Context, user: discord.User, *, nickname: str = None) -> None:
         """
-        Change the nickname of a user on a server.
-
-        :param context: The hybrid command context.
-        :param user: The user that should have its nickname changed.
-        :param nickname: The new nickname of the user. Default is None, which will reset the nickname.
+        Change the nickname of a user on a server
+        :param context: The hybrid command context
+        :param user: The user that should have its nickname changed
+        :param nickname: The new nickname of the user. Default is None, which will reset the nickname
         """
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         try:
@@ -93,10 +92,11 @@ class Moderation(commands.Cog, name="moderation"):
                 color=0x9C84EF
             )
             await context.send(embed=embed)
-        except:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
-                description="An error occurred while trying to change the nickname of the user. Make sure my role is above the role of the user you want to change the nickname.",
+                description="An error occurred while trying to change the nickname of the user. "
+                            "Make sure my role is above the role of the user you want to change the nickname.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)
@@ -110,11 +110,10 @@ class Moderation(commands.Cog, name="moderation"):
     @app_commands.describe(user="The user that should be banned.", reason="The reason why the user should be banned.")
     async def ban(self, context: Context, user: discord.User, *, reason: str = "Not specified") -> None:
         """
-        Bans a user from the server.
-
-        :param context: The hybrid command context.
-        :param user: The user that should be banned from the server.
-        :param reason: The reason for the ban. Default is "Not specified".
+        Bans a user from the server
+        :param context: The hybrid command context
+        :param user: The user that should be banned from the server
+        :param reason: The reason for the ban. Default is "Not specified"
         """
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         try:
@@ -138,14 +137,15 @@ class Moderation(commands.Cog, name="moderation"):
                 await context.send(embed=embed)
                 try:
                     await member.send(f"You were banned by **{context.author}**!\nReason: {reason}")
-                except:
+                except (Exception,):
                     # Couldn't send a message in the private messages of the user
                     pass
                 await member.ban(reason=reason)
-        except:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
-                description="An error occurred while trying to ban the user. Make sure my role is above the role of the user you want to ban.",
+                description="An error occurred while trying to ban the user. "
+                            "Make sure my role is above the role of the user you want to ban.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)
@@ -158,14 +158,18 @@ class Moderation(commands.Cog, name="moderation"):
     @checks.not_blacklisted()
     async def warning(self, context: Context) -> None:
         """
-        Manage warnings of a user on a server.
-
-        :param context: The hybrid command context.
+        Manage warnings of a user on a server
+        :param context: The hybrid command context
         """
         if context.invoked_subcommand is None:
             embed = discord.Embed(
                 title="Error!",
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a warning to a user.\n`remove` - Remove a warning from a user.\n`list` - List all warnings of a user.",
+                description="Please specify a subcommand.\n"
+                            "\n"
+                            "**Subcommands:**\n"
+                            "`add` - Add a warning to a user.\n"
+                            "`remove` - Remove a warning from a user.\n"
+                            "`list` - List all warnings of a user.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)
@@ -179,11 +183,10 @@ class Moderation(commands.Cog, name="moderation"):
     @app_commands.describe(user="The user that should be warned.", reason="The reason why the user should be warned.")
     async def warning_add(self, context: Context, user: discord.User, *, reason: str = "Not specified") -> None:
         """
-        Warns a user in his private messages.
-
-        :param context: The hybrid command context.
-        :param user: The user that should be warned.
-        :param reason: The reason for the warn. Default is "Not specified".
+        Warns a user in his private messages
+        :param context: The hybrid command context
+        :param user: The user that should be warned
+        :param reason: The reason for the warn. Default is "Not specified"
         """
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         total = await db_manager.add_warn(
@@ -200,7 +203,7 @@ class Moderation(commands.Cog, name="moderation"):
         await context.send(embed=embed)
         try:
             await member.send(f"You were warned by **{context.author}**!\nReason: {reason}")
-        except:
+        except (Exception,):
             # Couldn't send a message in the private messages of the user
             await context.send(f"{member.mention}, you were warned by **{context.author}**!\nReason: {reason}")
 
@@ -210,20 +213,21 @@ class Moderation(commands.Cog, name="moderation"):
     )
     @checks.not_blacklisted()
     @commands.has_permissions(manage_messages=True)
-    @app_commands.describe(user="The user that should get their warning removed.", warn_id="The ID of the warning that should be removed.")
+    @app_commands.describe(user="The user that should get their warning removed.",
+                           warn_id="The ID of the warning that should be removed.")
     async def warning_remove(self, context: Context, user: discord.User, warn_id: int) -> None:
         """
-        Warns a user in his private messages.
-
-        :param context: The hybrid command context.
-        :param user: The user that should get their warning removed.
-        :param warn_id: The ID of the warning that should be removed.
+        Warns a user in his private messages
+        :param context: The hybrid command context
+        :param user: The user that should get their warning removed
+        :param warn_id: The ID of the warning that should be removed
         """
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         total = await db_manager.remove_warn(warn_id, user.id, context.guild.id)
         embed = discord.Embed(
             title="User Warn Removed!",
-            description=f"I've removed the warning **#{warn_id}** from **{member}**!\nTotal warns for this user: {total}",
+            description=f"I've removed the warning **#{warn_id}** from **{member}**!\n"
+                        f"Total warns for this user: {total}",
             color=0x9C84EF
         )
         await context.send(embed=embed)
@@ -237,10 +241,9 @@ class Moderation(commands.Cog, name="moderation"):
     @app_commands.describe(user="The user you want to get the warnings of.")
     async def warning_list(self, context: Context, user: discord.User):
         """
-        Shows the warnings of a user in the server.
-
-        :param context: The hybrid command context.
-        :param user: The user you want to get the warnings of.
+        Shows the warnings of a user in the server
+        :param context: The hybrid command context
+        :param user: The user you want to get the warnings of
         """
         warnings_list = await db_manager.get_warnings(user.id, context.guild.id)
         embed = discord.Embed(
@@ -252,7 +255,8 @@ class Moderation(commands.Cog, name="moderation"):
             description = "This user has no warnings."
         else:
             for warning in warnings_list:
-                description += f"• Warned by <@{warning[2]}>: **{warning[3]}** (<t:{warning[4]}>) - Warn ID #{warning[5]}\n"
+                description += f"• Warned by <@{warning[2]}>: " \
+                               f"**{warning[3]}** (<t:{warning[4]}>) - Warn ID #{warning[5]}\n"
         embed.description = description
         await context.send(embed=embed)
 
@@ -265,10 +269,9 @@ class Moderation(commands.Cog, name="moderation"):
     @app_commands.describe(amount="The amount of messages that should be deleted.")
     async def purge(self, context: Context, amount: int) -> None:
         """
-        Delete a number of messages.
-
-        :param context: The hybrid command context.
-        :param amount: The number of messages that should be deleted.
+        Delete a number of messages
+        :param context: The hybrid command context
+        :param amount: The number of messages that should be deleted
         """
         purged_messages = await context.channel.purge(limit=amount)
         embed = discord.Embed(
@@ -284,14 +287,14 @@ class Moderation(commands.Cog, name="moderation"):
     )
     @commands.has_permissions(ban_members=True)
     @checks.not_blacklisted()
-    @app_commands.describe(user_id="The user ID that should be banned.", reason="The reason why the user should be banned.")
+    @app_commands.describe(user_id="The user ID that should be banned.",
+                           reason="The reason why the user should be banned.")
     async def hackban(self, context: Context, user_id: str, *, reason: str = "Not specified") -> None:
         """
-        Bans a user without the user having to be in the server.
-
-        :param context: The hybrid command context.
-        :param user_id: The ID of the user that should be banned.
-        :param reason: The reason for the ban. Default is "Not specified".
+        Bans a user without the user having to be in the server
+        :param context: The hybrid command context
+        :param user_id: The ID of the user that should be banned
+        :param reason: The reason for the ban. Default is "Not specified"
         """
         try:
             await self.bot.http.ban(user_id, context.guild.id, reason=reason)
@@ -306,10 +309,11 @@ class Moderation(commands.Cog, name="moderation"):
                 value=reason
             )
             await context.send(embed=embed)
-        except Exception as e:
+        except (Exception,):
             embed = discord.Embed(
                 title="Error!",
-                description="An error occurred while trying to ban the user. Make sure ID is an existing ID that belongs to a user.",
+                description="An error occurred while trying to ban the user. "
+                            "Make sure ID is an existing ID that belongs to a user.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)

@@ -14,7 +14,7 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Bot, Context
 
-from data import exceptions
+import exceptions
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -31,8 +31,8 @@ bot = Bot(command_prefix=commands.when_mentioned_or(
 
 async def init_db():
     async with aiosqlite.connect("data/database/database.db") as db:
-        with open("data/database/schema.sql") as file:
-            await db.executescript(file.read())
+        with open("data/database/schema.sql") as schema_file:
+            await db.executescript(schema_file.read())
         await db.commit()
 
 
@@ -58,7 +58,7 @@ async def on_ready() -> None:
 @tasks.loop(minutes=1.0)
 async def status_task() -> None:
     """
-    Setup the game status task of the bot
+    Set up the game status task of the bot
     """
     statuses = ["with you!", "with Krypton!", "with humans!"]
     await bot.change_presence(activity=discord.Game(random.choice(statuses)))
@@ -68,8 +68,7 @@ async def status_task() -> None:
 async def on_message(message: discord.Message) -> None:
     """
     The code in this event is executed every time someone sends a message, with or without the prefix
-
-    :param message: The message that was sent.
+    :param message: The message that was sent
     """
     if message.author == bot.user or message.author.bot:
         return
@@ -90,7 +89,8 @@ async def on_command_completion(context: Context) -> None:
     executed_command = str(split[0])
     if context.guild is not None:
         print(
-            f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})")
+            f"Executed {executed_command} command in {context.guild.name} "
+            f"(ID: {context.guild.id}) by {context.author} (ID: {context.author.id})")
     else:
         print(
             f"Executed {executed_command} command by {context.author} (ID: {context.author.id}) in DMs")
@@ -100,8 +100,8 @@ async def on_command_completion(context: Context) -> None:
 async def on_command_error(context: Context, error) -> None:
     """
     The code in this event is executed every time a normal valid command catches an error
-    :param context: The context of the normal command that failed executing.
-    :param error: The error that has been faced.
+    :param context: The context of the normal command that failed executing
+    :param error: The error that has been faced
     """
     if isinstance(error, commands.CommandOnCooldown):
         minutes, seconds = divmod(error.retry_after, 60)
@@ -109,7 +109,9 @@ async def on_command_error(context: Context, error) -> None:
         hours = hours % 24
         embed = discord.Embed(
             title="Hey, please slow down!",
-            description=f"You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
+            description=f"You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} "
+                        f"{f'{round(minutes)} minutes' if round(minutes) > 0 else ''} "
+                        f"{f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
             color=0xE02B2B
         )
         await context.send(embed=embed)
@@ -157,9 +159,9 @@ async def load_cogs() -> None:
     """
     The code in this function is executed whenever the bot will start.
     """
-    for file in os.listdir(f"./data/cogs"):
-        if file.endswith(".py"):
-            extension = file[:-3]
+    for cog_file in os.listdir(f"./data/cogs"):
+        if cog_file.endswith(".py"):
+            extension = cog_file[:-3]
             try:
                 await bot.load_extension(f"data.cogs.{extension}")
                 print(f"Loaded extension '{extension}'")

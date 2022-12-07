@@ -9,8 +9,8 @@ Version: 5.3
 import json
 from typing import Callable, TypeVar
 
-from data.exceptions import *
-from data.helpers import db_manager
+import db_manager
+from ..exceptions import *
 
 T = TypeVar("T")
 

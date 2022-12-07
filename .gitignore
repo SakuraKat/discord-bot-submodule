@@ -143,4 +143,6 @@ cython_debug/
 # SQLITE database
 *.db
 
+# Project specific
+# Config file with sensitive data
 config.json
