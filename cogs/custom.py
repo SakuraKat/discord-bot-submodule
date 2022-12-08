@@ -50,7 +50,8 @@ class CustomCommands(commands.Cog, name="custom"):
         """
         # Do your stuff here
         bs = random.SystemRandom().choice(
-            open("../data-manager-submodule/Output/output.txt", encoding="utf-8").readlines()
+            open("../data-manager-submodule/Output/output.txt",
+                 encoding="utf-8").readlines()
         ).rstrip().replace("___", "#")
         await context.send(bs)
 
