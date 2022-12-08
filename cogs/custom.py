@@ -16,6 +16,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #  Description:
+#  Using template from kkrypt0nn's repository linked below:
+#  https://github.com/kkrypt0nn/Python-Discord-Bot-Template
+#  This command prints out random quotes from the dataset
+#  which is meant to be training data for the GPT-J model.
 
 import random
 
@@ -45,16 +49,9 @@ class CustomCommands(commands.Cog, name="custom"):
         :param context: The application command context
         """
         # Do your stuff here
-        # Pick a random line from combined.txt and assign it to a variable called bs
-        # the file is located in data/combined.txt
-        # the file contents are in utf-8 encoding
-        # the file contains one bullshit per line
-        # file path from root directory: data/combined.txt
-        # current file path: discord-bot-submodule\cogs\custom.py
-        # relative file path: ../data/combined.txt
         bs = random.SystemRandom().choice(
-            open("../data/combined.txt", encoding="utf-8").readlines()).replace("___", "#")
-        # Send the bullshit to the channel
+            open("../data-manager-submodule/Output/output.txt", encoding="utf-8").readlines()
+        ).rstrip().replace("___", "#")
         await context.send(bs)
 
 

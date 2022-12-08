@@ -16,8 +16,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #  Description:
-
-# Using template: https://github.com/kkrypt0nn/Python-Discord-Bot-Template
+#  Using template from kkrypt0nn's repository linked below:
+#  https://github.com/kkrypt0nn/Python-Discord-Bot-Template
+#  Added functionality so the bot can reply to messages without the prefix.
+#  This is useful for bots that are meant to be used as a chatbot like this one.
+#  The do_magic function is an example of how to do this.
+#  For now, the bot will only reply to the message "Hello" with "Hello".
 #
 
 import asyncio
