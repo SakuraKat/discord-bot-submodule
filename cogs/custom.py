@@ -57,7 +57,8 @@ class CustomCommands(commands.Cog, name="custom"):
                 open("../data-manager-submodule/Output/output.txt",
                      encoding="utf-8").readlines()
             ).rstrip().replace("___", "#")
-        bs = "temporary output:\n\t" + "```" + bs + "```" + "\ntook " + str(tries) + " tries"
+        bs = "temporary output:\n\t" + "```" + bs + \
+            "```" + "\ntook " + str(tries) + " tries"
         await context.send(bs)
 
 
