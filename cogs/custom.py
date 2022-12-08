@@ -49,10 +49,15 @@ class CustomCommands(commands.Cog, name="custom"):
         :param context: The application command context
         """
         # Do your stuff here
-        bs = random.SystemRandom().choice(
-            open("../data-manager-submodule/Output/output.txt",
-                 encoding="utf-8").readlines()
-        ).rstrip().replace("___", "#")
+        bs = ""
+        tries = 0
+        while bs == "":
+            tries += 1
+            bs = random.SystemRandom().choice(
+                open("../data-manager-submodule/Output/output.txt",
+                     encoding="utf-8").readlines()
+            ).rstrip().replace("___", "#")
+        bs = "temporary output:\n\t" + "```" + bs + "```" + "\ntook " + str(tries) + " tries"
         await context.send(bs)
 
 
